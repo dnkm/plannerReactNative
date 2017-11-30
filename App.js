@@ -35,6 +35,7 @@ export default class App extends React.Component {
     this.changeMonth = this.changeMonth.bind(this);
     this.changeDate = this.changeDate.bind(this);
     this.getMemos = this.getMemos.bind(this);
+    this.addMemo = this.addMemo.bind(this);
 
     this.getMemos(today);
   }
@@ -58,7 +59,7 @@ export default class App extends React.Component {
     db.getMemo(date).then(querySnapshot => {
       let memos = [];
       querySnapshot.forEach(doc => {
-        let memo = {...doc.data(), id: doc.id}
+        let memo = { ...doc.data(), id: doc.id }
         memos.push(memo);
       });
       this.setState({
@@ -66,12 +67,23 @@ export default class App extends React.Component {
       })
     })
   }
+  addMemo(memoTxt) {
+    let selectedDate = this.state.selectedDate;
+    db.addMemo({
+      year: selectedDate.getFullYear(),
+      month: selectedDate.getMonth() + 1,
+      date: selectedDate.getDate(),
+      memo: memoTxt
+    }).then(_ref => { this.getMemos(selectedDate) });
+  }
   render() {
     return (
       <View style={styles.container}>
         <Navigator selectedDate={this.state.selectedDate} changeMonth={this.changeMonth} />
         <MonthlyView selectedDate={this.state.selectedDate} memos={this.state.memos} changeDate={this.changeDate} />
-        <MemoView selectedMemos={this.state.memos.filter(m => m.date == this.state.selectedDate.getDate())} />
+        <MemoView
+          addMemo={this.addMemo}
+          selectedMemos={this.state.memos.filter(m => m.date == this.state.selectedDate.getDate())} />
       </View>
     );
   }

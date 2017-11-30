@@ -8,3 +8,10 @@ export const getMemo = (date) => {
         .where("month", "==", date.getMonth() + 1)
         .get()
 }
+
+export const addMemo = (memo) => {
+    let db = firebase.firestore();
+
+    return db.collection('todo')
+        .add(memo)
+}

@@ -1,25 +1,34 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { Icon } from "react-native-elements";
 
 var { height, width } = Dimensions.get('window')
 
 const DayView = ({ date, selectedDate, memos, changeDate }) => {
-    if (date < 0) {
-        return (
-            <Text style={styles.daily}></Text>
-        )
-    }
-
     return (
-        <Text
-            style={[styles.daily, 
-                memos.length > 0 && styles.hasmemo,
-                selectedDate.getDate() == date && styles.selectedDate
+        <TouchableOpacity
+            style={[
+                styles.daily
             ]}
-            onPress={() => changeDate(date)}
+            onPress={() => {
+                if (date > 0)
+                    changeDate(date)
+            }}
         >
-            {date}
-        </Text>
+            <Text style={selectedDate.getDate() == date && styles.selectedDate}>
+                {date > 0 && date}
+            </Text>
+            {
+                memos.length > 0 &&
+                <Icon 
+                    name="fiber-manual-record" 
+                    iconStyle={{
+                        color: 'gray',
+                        fontSize: 10
+                    }}
+                 />
+            }
+        </TouchableOpacity>
     )
 }
 
@@ -29,7 +38,11 @@ const MonthlyView = ({ selectedDate, memos, changeDate }) => {
     iDate.setDate(1);
     let firstDay = iDate.getDay();
 
-    let days = new Array(31)
+    iDate.setMonth(iDate.getMonth()+1)
+    iDate.setDate(0);
+    let lastDate = iDate.getDate();
+
+    let days = new Array(lastDate)
         .fill(0)
         .map((_val, i) => i + 1)
 
@@ -59,9 +72,9 @@ const MonthlyView = ({ selectedDate, memos, changeDate }) => {
     return (
         <View style={styles.monthly}>
             {
-                [0, 1, 2, 3, 4].map(i =>
+                weeks.map((week, i) =>
                     <View style={styles.weekly} key={i}>
-                        {weeks[i]}
+                        {week}
                     </View>
                 )
             }
@@ -73,7 +86,6 @@ export default MonthlyView;
 const styles = StyleSheet.create({
     monthly: {
         flex: 0.5,
-        backgroundColor: 'orange',
         flexWrap: 'wrap',
         flexDirection: 'column'
     },
@@ -83,14 +95,15 @@ const styles = StyleSheet.create({
     },
 
     daily: {
-        flexBasis: (width / 7)
-    },
-    hasmemo: {
-        backgroundColor: 'black',
-        color: 'white'
+        flexBasis: (width / 7),
+        flex: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: 'gray'
     },
     selectedDate: {
-        borderColor: 'red',
-        color: 'red'
-    } 
+        color: 'hotpink'
+    }
 })

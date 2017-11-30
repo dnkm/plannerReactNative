@@ -10,7 +10,8 @@ const Navigator = ({selectedDate, changeMonth}) => {
             />
             <Text style={{
                 color:'white',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                fontSize: 20
             }}>
                 {selectedDate.getFullYear()} / {selectedDate.getMonth()+1}
             </Text>
@@ -26,13 +27,13 @@ export default Navigator;
 const styles = StyleSheet.create({
     navigator: {
         backgroundColor: 'deepskyblue',
-        height: 40,
+        height: 70,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row'
     },
     icon: {
-        fontSize: 40,
+        fontSize: 50,
         color: 'white',
         marginLeft: 20,
         marginRight: 20
