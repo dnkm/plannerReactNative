@@ -6,6 +6,7 @@ const Navigator = ({selectedDate, changeMonth}) => {
     return (
         <View style={styles.navigator}>
             <Icon name="keyboard-arrow-left" iconStyle={styles.icon} 
+                underlayColor="deepskyblue"
                 onPress={() => changeMonth(-1)}
             />
             <Text style={{
@@ -13,9 +14,10 @@ const Navigator = ({selectedDate, changeMonth}) => {
                 fontWeight: 'bold',
                 fontSize: 20
             }}>
-                {selectedDate.getFullYear()} / {selectedDate.getMonth()+1}
+                {selectedDate.format('YYYY / MM')}
             </Text>
             <Icon name="keyboard-arrow-right" iconStyle={styles.icon}
+                underlayColor="deepskyblue"
                 onPress={() => changeMonth(1)} 
             />
         </View>
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
     navigator: {
         backgroundColor: 'deepskyblue',
         height: 70,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row'
     },

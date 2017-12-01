@@ -4,7 +4,7 @@ import { Icon } from "react-native-elements";
 
 var { height, width } = Dimensions.get('window')
 
-const DayView = ({ date, selectedDate, memos, changeDate }) => {
+const DayView = ({ date, selectedDate, memos, changeDateOfMonth }) => {
     return (
         <TouchableOpacity
             style={[
@@ -12,10 +12,10 @@ const DayView = ({ date, selectedDate, memos, changeDate }) => {
             ]}
             onPress={() => {
                 if (date > 0)
-                    changeDate(date)
+                changeDateOfMonth(date)
             }}
         >
-            <Text style={selectedDate.getDate() == date && styles.selectedDate}>
+            <Text style={selectedDate.date() == date && styles.selectedDate}>
                 {date > 0 && date}
             </Text>
             {
@@ -32,8 +32,7 @@ const DayView = ({ date, selectedDate, memos, changeDate }) => {
     )
 }
 
-const MonthlyView = ({ selectedDate, memos, changeDate }) => {
-
+const MonthlyView = ({ selectedDate, memos, changeDateOfMonth }) => {
     let iDate = new Date(selectedDate);
     iDate.setDate(1);
     let firstDay = iDate.getDay();
@@ -55,8 +54,8 @@ const MonthlyView = ({ selectedDate, memos, changeDate }) => {
             .map(date => (
                 <DayView key={date} date={date}
                     selectedDate={selectedDate}
-                    memos={memos.filter(m => m.date == date)}
-                    changeDate={changeDate}
+                    memos={memos.filter(m => m.moment.date() == date)}
+                    changeDateOfMonth={changeDateOfMonth}
                 />
             ));
 
@@ -101,7 +100,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRightWidth: 1,
         borderBottomWidth: 1,
-        borderColor: 'gray'
+        borderColor: '#eee',
+        height: (width / 7)
     },
     selectedDate: {
         color: 'hotpink'

@@ -3,17 +3,33 @@ import { View, Text, StyleSheet } from 'react-native';
 import { FormLabel, FormInput, Button, Icon } from 'react-native-elements';
 
 class MemoView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {newMemoText : ''}
+    }
 
     render() {
-        let { selectedMemos, addMemo } = this.props;
+        let { selectedMemos, addMemo, updateMemo, deleteMemo } = this.props;
+
+        const toggleFavorite = (memo) => {
+            const newMemo = {...memo}
+            newMemo.fav = (memo.fav) ? !memo.fav : true;
+            updateMemo(newMemo);
+        }
+
         return (
             <View style={styles.MemoView}>
                 <FormLabel>DAILY MEMO</FormLabel>
                 {
                     selectedMemos.map(memo => (
                         <View key={memo.id} style={styles.MemoItem}>
-                            <Icon name="play-arrow" iconStyle={{ color: 'gray', fontSize: 15 }} />
-                            <Text style={{ color: 'gray' }}>{memo.memo}</Text>
+                            <Icon name={memo.fav ? "favorite" : "favorite-border"} iconStyle={{ color: 'gray', fontSize: 15, paddingRight: 10 }} 
+                                onPress={() => toggleFavorite(memo)}
+                            />
+                            <Text style={{ color: 'gray', flexGrow: 1 }}>{memo.memo}</Text>
+                            <Icon name="remove" type="font-awesome" iconStyle={{ color: 'gray', fontSize: 15 }} 
+                                onPress={() => deleteMemo(memo)}
+                            />
                         </View>
                     ))
                 }
@@ -29,7 +45,8 @@ class MemoView extends React.Component {
                     alignItems: 'center'
                 }}>
                     <FormInput
-                        onChangeText={text => this.newMemoText = text}
+                        value={this.state.newMemoText}
+                        onChangeText={text => this.setState({newMemoText: text})}
                         containerStyle={{ flexBasis: 1, flexGrow: 1 }}
                     />
                     <Button
@@ -37,7 +54,8 @@ class MemoView extends React.Component {
                         fontSize={10}
                         onPress={
                             () => {
-                                addMemo(this.newMemoText)
+                                addMemo(this.state.newMemoText)
+                                this.setState({newMemoText: ''})
                             }
                         }
                     />
@@ -56,9 +74,10 @@ const styles = StyleSheet.create({
     },
     MemoItem: {
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
         borderBottomColor: '#bbb',
         borderBottomWidth: StyleSheet.hairlineWidth,
-        padding: 10
+        padding: 20
     }
 })
